@@ -1,7 +1,10 @@
 #import <Cordova/CDV.h>
 
-@interface EJDB : CDVPlugin
+@interface EJDBPlugin : CDVPlugin
 
-- (void) init:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) ejdbnew:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) ejdbcreatecoll:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) ejdbsavejson:(CDVInvokedUrlCommand*)command;
+- (CDBPluginResult*) ejdbqryexecute:(CDVInvokedUrlCommand*)command;
 
 @end

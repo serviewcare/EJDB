@@ -2,8 +2,37 @@
 #import "EJDBPlugin.h"
 #import <Foundation/Foundation.h>
 
-@implementation EJDB
+@implementation EJDBPlugin
 
+static EJDB *jb;
+
+- (CDVPluginResult*) ejdbnew:(CDVInvokedUrlCommand*)command {
+    NSString* callbackId = [command callbackId];
+    
+    jb = ejdbnew();
+    
+    CDVPluginResult* result = NULL;
+    
+    if (!ejdbopen(jb, "addressbook", JBOWRITER | JBOCREAT | JBOTRUNC)) {
+        result = [CDVPluginResult
+                  resultWithStatus:CDVCommandStatus_OK];
+    }
+    
+    
+    
+    [self success:result callbackId:callbackId];
+}
+- (CDVPluginResult*) ejdbcreatecoll:(CDVInvokedUrlCommand*)command {
+    
+}
+- (CDVPluginResult*) ejdbsavejson:(CDVInvokedUrlCommand*)command {
+    
+}
+- (CDVPluginResult*) ejdbqryexecute:(CDVInvokedUrlCommand*)command {
+    
+}
+
+/*
 - (void)init:(CDVInvokedUrlCommand*)command
 {
 
@@ -21,5 +50,6 @@
 
     [self success:result callbackId:callbackId];
 }
+ */
 
 @end

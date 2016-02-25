@@ -3,7 +3,7 @@
         id="com.silvervue.ejdb"
         version="0.7.0">
 
-  <name>Soti MobiControl</name>
+  <name>EJDB Plugin</name>
 
   <engines>
     <engine name="cordova" version=">=3.4.0"/>
@@ -18,8 +18,8 @@
   <platform name="ios">
     
     <config-file target="config.xml" parent="/widget">
-      <feature name="EJDB">
-        <param name="ios-package" value="EJDB" />
+      <feature name="EJDBPlugin">
+        <param name="ios-package" value="EJDBPlugin" />
       </feature>
     </config-file>
 
