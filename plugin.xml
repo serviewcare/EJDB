@@ -26,7 +26,7 @@
     <framework src="libstdc++.6.dylib" />
     <framework src="libz.dylib" />
 
-    <source-file src="src/ios/libs/libtcejdb.a" framework="true"/>
+    <source-file src="src/ios/libs/libEJDBKit.a" framework="true"/>
 
     <header-file src="src/ios/headers/ejdb.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/bson.h" target-dir="EJDB"/>
@@ -42,6 +42,17 @@
     <header-file src="src/ios/headers/tcutil.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/utf8proc.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/ejdb_private.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBKit.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBKitModel.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBKitQuery.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBKitQueryBuilder.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBCollection.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/BSONArchiving.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/BSONDecoder.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/BSONEncoder.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBDataBase.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBQueryBuilderDelegate.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBQueryOrderByHint.h" target-dir="EJDB"/>
 
     <header-file src="src/ios/EJDBPlugin.h" target-dir="EJDB"/>
     <source-file src="src/ios/EJDBPlugin.m" target-dir="EJDB"/>
