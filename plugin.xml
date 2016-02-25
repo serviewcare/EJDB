@@ -31,7 +31,7 @@
     <header-file src="src/ios/headers/ejdb.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/bson.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/basedefs.h" target-dir="EJDB"/>
-    <header-file src="src/ios/headers/ejbutl.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/ejdbutl.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/encoding.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/myconf.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/tcadb.h" target-dir="EJDB"/>
