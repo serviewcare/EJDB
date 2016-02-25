@@ -43,9 +43,9 @@
     <header-file src="src/ios/headers/utf8proc.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/ejdb_private.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/EJDBKit.h" target-dir="EJDB"/>
-    <header-file src="src/ios/headers/EJDBKitModel.h" target-dir="EJDB"/>
-    <header-file src="src/ios/headers/EJDBKitQuery.h" target-dir="EJDB"/>
-    <header-file src="src/ios/headers/EJDBKitQueryBuilder.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBModel.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBQuery.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBQueryBuilder.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/EJDBCollection.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/BSONArchiving.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/BSONDecoder.h" target-dir="EJDB"/>
