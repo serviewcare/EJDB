@@ -2,6 +2,6 @@
 
 module.exports = {
     init: function (name, successCallback, errorCallback) {
-	cordova.exec(successCallback, errorCallback, "MobiControl", "init", [name]);
+	cordova.exec(successCallback, errorCallback, "EJDB", "init", [name]);
     }
 };

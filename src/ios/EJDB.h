@@ -1,6 +1,6 @@
 #import <Cordova/CDV.h>
 
-@interface MobiControl : CDVPlugin
+@interface EJDB : CDVPlugin
 
 - (void) init:(CDVInvokedUrlCommand*)command;
 
