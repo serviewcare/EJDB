@@ -28,7 +28,8 @@
 
     <source-file src="src/ios/libs/libtcejdb.a" framework="true"/>
 
-    <header-file src="src/ios/headers/AgentSDK.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/ejdb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/ejdb_private.h" target-dir="EJDB"/>
 
     <header-file src="src/ios/EJDB.h" target-dir="EJDB"/>
     <source-file src="src/ios/EJDB.m" target-dir="EJDB"/>
