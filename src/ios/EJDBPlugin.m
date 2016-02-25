@@ -1,4 +1,5 @@
-#import "ejdb_private.h"
+#import "ejdb.h"
+#import "EJDBPlugin.h"
 #import <Foundation/Foundation.h>
 
 @implementation EJDB

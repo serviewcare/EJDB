@@ -31,8 +31,8 @@
     <header-file src="src/ios/headers/ejdb.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/ejdb_private.h" target-dir="EJDB"/>
 
-    <header-file src="src/ios/EJDB.h" target-dir="EJDB"/>
-    <source-file src="src/ios/EJDB.m" target-dir="EJDB"/>
+    <header-file src="src/ios/EJDBPlugin.h" target-dir="EJDB"/>
+    <source-file src="src/ios/EJDBPlugin.m" target-dir="EJDB"/>
 
   </platform>
 
