@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.silvervue.ejdb"
+        version="0.7.0">
+
+  <name>Soti MobiControl</name>
+
+  <engines>
+    <engine name="cordova" version=">=3.4.0"/>
+  </engines>
+
+  <asset src="www/ejdb.js" target="js/mobi.js"/>
+
+  <js-module src="www/ejdb.js" name="ejdb">
+    <clobbers target="ejdb" />
+  </js-module>
+
+  <platform name="ios">
+    
+    <config-file target="config.xml" parent="/widget">
+      <feature name="EJDB">
+        <param name="ios-package" value="EJDB" />
+      </feature>
+    </config-file>
+
+    <framework src="libstdc++.6.dylib" />
+    <framework src="libz.dylib" />
+
+    <source-file src="src/ios/libs/libtcejdb.a" framework="true"/>
+
+    <header-file src="src/ios/headers/AgentSDK.h" target-dir="EJDB"/>
+
+    <header-file src="src/ios/EJDB.h" target-dir="EJDB"/>
+    <source-file src="src/ios/EJDB.m" target-dir="EJDB"/>
+
+  </platform>
+
+</plugin>
