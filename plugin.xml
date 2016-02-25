@@ -29,6 +29,18 @@
     <source-file src="src/ios/libs/libtcejdb.a" framework="true"/>
 
     <header-file src="src/ios/headers/ejdb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/bson.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/basedefs.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/ejbutl.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/encoding.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/myconf.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/tcadb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/tcbdb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/tcfdb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/tchdb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/tctdb.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/tcutil.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/utf8proc.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/ejdb_private.h" target-dir="EJDB"/>
 
     <header-file src="src/ios/EJDBPlugin.h" target-dir="EJDB"/>
