@@ -53,6 +53,7 @@
     <header-file src="src/ios/headers/EJDBDataBase.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/EJDBQueryBuilderDelegate.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/EJDBQueryOrderByHint.h" target-dir="EJDB"/>
+    <header-file src="src/ios/headers/EJDBFIQueryBuilder.h" target-dir="EJDB"/>
 
     <header-file src="src/ios/EJDBPlugin.h" target-dir="EJDB"/>
     <source-file src="src/ios/EJDBPlugin.m" target-dir="EJDB"/>
