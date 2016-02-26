@@ -2,9 +2,10 @@
 
 @interface EJDBPlugin : CDVPlugin
 
-- (CDVPluginResult*) ejdbnew:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) ejdbcreatecoll:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) ejdbsavejson:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) ejdbqryexecute:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) createDatabaseWithPath:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) initializeCollectionWithName:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) saveObject:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) find:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) remove:(CDVInvokedUrlCommand*)command;
 
 @end
