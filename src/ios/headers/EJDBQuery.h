@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#include "tcejdb/ejdb.h"
+#include "ejdb.h"
 
 typedef NS_OPTIONS(int, EJDBQueryOptions) {
     /** EJDBQueryCountOnly - Fetch only the count of records. */

@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#include "tcejdb/ejdb.h"
+#include "ejdb.h"
 #import "EJDBCollection.h"
 
 @class EJDBQuery;
