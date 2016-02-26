@@ -4,16 +4,16 @@
 
 @implementation EJDBPlugin
 
-static EJDBDatabase *jb = NULL;
+static EJDBDatabase *jb = nil;
 
-static NSMutableDictionary *collectionHandles = NULL;
+static NSMutableDictionary *collectionHandles = nil;
 
 - (CDVPluginResult*) createDatabaseWithPath:(CDVInvokedUrlCommand*)command {
     NSString* callbackId = [command callbackId];
 
     NSString* path = [[command arguments] objectAtIndex:0];
     
-    if(jb != NULL && [jb isOpen]) {
+    if(jb && [jb isOpen]) {
         [jb close];
     }
     
@@ -26,12 +26,12 @@ static NSMutableDictionary *collectionHandles = NULL;
     jb = [[EJDBDatabase alloc] initWithPath: path dbFileName:@"silversearch.db"];
     
     if(jb) {
-        opened = [jb openWithError:NULL];
+        opened = [jb openWithError: NULL];
     }
     CDVPluginResult* result = [CDVPluginResult
               resultWithStatus:CDVCommandStatus_ERROR];
     
-    if (jb != NULL && opened) {
+    if (jb && opened) {
         result = [CDVPluginResult
                   resultWithStatus:CDVCommandStatus_OK];
         [self success:result callbackId:callbackId];
@@ -59,7 +59,7 @@ static NSMutableDictionary *collectionHandles = NULL;
     CDVPluginResult* result = [CDVPluginResult
                                resultWithStatus:CDVCommandStatus_ERROR];
 
-    if ((collection != NULL)) {
+    if ((collection)) {
     
         // Save collection instance by name.
         [collectionHandles setObject: collection forKey: name];
@@ -92,7 +92,7 @@ static NSMutableDictionary *collectionHandles = NULL;
     CDVPluginResult* result = [CDVPluginResult
                                resultWithStatus:CDVCommandStatus_ERROR];
     
-    if ((collection != NULL) && (objectData != NULL) && (jsonDict != NULL) && [collection saveObject: jsonDict]) {
+    if (collection && objectData && jsonDict && [collection saveObject: jsonDict]) {
         
         result = [CDVPluginResult
                   resultWithStatus:CDVCommandStatus_OK];
@@ -133,7 +133,7 @@ static NSMutableDictionary *collectionHandles = NULL;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
         
         
-        if(jsonData == NULL) {
+        if(jsonData) {
             [self error:result callbackId:callbackId];
             return result;
         }
@@ -165,7 +165,7 @@ static NSMutableDictionary *collectionHandles = NULL;
     CDVPluginResult* result = [CDVPluginResult
                                resultWithStatus:CDVCommandStatus_ERROR];
     
-    if ((collection != NULL) && [collection removeObjectWithOID:uid]) {
+    if (collection && [collection removeObjectWithOID:uid]) {
         result = [CDVPluginResult
                   resultWithStatus:CDVCommandStatus_OK];
         [self success:result callbackId:callbackId];

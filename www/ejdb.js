@@ -2,14 +2,14 @@
 
 module.exports = {
     createDatabaseWithPath: function (path, successCallback, errorCallback) {
-	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "init", [path]);
+	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "createDatabaseWithPath", [path]);
     },
     initializeCollectionWithName: function(name, successCallback, errorCallback) {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "initializeCollectionWithName", [name]);	
     },
     saveObject: function(name, someObject, successCallback, errorCallback) {
 	var jsonObj = JSON.stringify(someObject);
-	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "initializeCollectionWithName", [name, jsonObj]);	
+	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "saveObject", [name, jsonObj]);	
     },
     find: function(name, query, successCallback, errorCallback) {
 	var jsonQuery = JSON.stringify(someQuery);
