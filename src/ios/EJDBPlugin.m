@@ -133,7 +133,7 @@ static NSMutableDictionary *collectionHandles = nil;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
         
         
-        if(jsonData) {
+        if(!jsonData) {
             [self error:result callbackId:callbackId];
             return result;
         }
