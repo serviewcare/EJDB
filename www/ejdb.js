@@ -11,9 +11,10 @@ module.exports = {
 	var jsonObj = JSON.stringify(someObject);
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "saveObject", [name, jsonObj]);	
     },
-    find: function(name, query, successCallback, errorCallback) {
+    find: function(name, query, hints, successCallback, errorCallback) {
 	var jsonQuery = JSON.stringify(query);
-	cordova.exec(function(r){successCallback(JSON.parse(r))}, errorCallback, "EJDBPlugin", "find", [name, jsonQuery]);		
+	var jsonHints = JSON.stringify(hints);
+	cordova.exec(function(r){successCallback(JSON.parse(r))}, errorCallback, "EJDBPlugin", "find", [name, jsonQuery, jsonHints]);
     },
     remove: function(name, uid, successCallback, errorCallback) {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "remove", [name, uid]);	

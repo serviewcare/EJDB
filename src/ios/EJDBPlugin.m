@@ -121,6 +121,7 @@ static NSMutableDictionary *collectionHandles = nil;
         
         NSString* name = [[command arguments] objectAtIndex:0];
         NSString* query = [[command arguments] objectAtIndex:1];
+        NSString* hint = [[command arguments] objectAtIndex:2];
         
         // Find collection by the name handle.
         EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
@@ -128,15 +129,17 @@ static NSMutableDictionary *collectionHandles = nil;
         NSError* error;
         NSData* objectData = [query dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:objectData options:kNilOptions error:&error];
+
+        NSData* hintData = [hint dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary* hintDict = [NSJSONSerialization JSONObjectWithData:hintData options:kNilOptions error:&error];
+
         
         CDVPluginResult* result = [CDVPluginResult
                                    resultWithStatus:CDVCommandStatus_ERROR];
         
         if (collection && objectData && jsonDict) {
-            EJDBQuery *query = [[EJDBQuery alloc]initWithCollection:collection
-                                                              query:jsonDict];
-
-            NSArray* results = [query fetchObjects];
+            NSArray* results = [jb findObjectsWithQuery:jsonDict hints:hintDict inCollection:collection error:&error];
+            
             NSMutableDictionary *postDict = [[NSMutableDictionary alloc]init];
             [postDict setValue:results forKey:@"results"];
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
