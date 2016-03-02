@@ -119,7 +119,6 @@ static NSMutableDictionary *collectionHandles = nil;
     NSData* objectData = [query dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:objectData options:kNilOptions error:&error];
     
-    
     CDVPluginResult* result = [CDVPluginResult
                                resultWithStatus:CDVCommandStatus_ERROR];
     
@@ -131,7 +130,7 @@ static NSMutableDictionary *collectionHandles = nil;
         NSMutableDictionary *postDict = [[NSMutableDictionary alloc]init];
         [postDict setValue:results forKey:@"results"];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
-        
+        NSString* jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         
         if(!jsonData) {
             [self error:result callbackId:callbackId];
@@ -140,9 +139,9 @@ static NSMutableDictionary *collectionHandles = nil;
         
         result = [CDVPluginResult
                   resultWithStatus:CDVCommandStatus_OK
-                  messageAsString: jsonData];
+                  messageAsString: jsonStr];
 
-        [self success:result callbackId:callbackId];
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
     else {
         [self error:result callbackId:callbackId];
