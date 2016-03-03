@@ -82,6 +82,41 @@ static NSMutableDictionary *collectionHandles = nil;
     }
 }
 
+- (CDVPluginResult*) saveObjects:(CDVInvokedUrlCommand*)command {
+    @synchronized(self) {
+        NSString* callbackId = [command callbackId];
+        
+        NSString* name = [[command arguments] objectAtIndex:0];
+        NSString* json = [[command arguments] objectAtIndex:1];
+        
+        // Find collection by the name handle.
+        EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
+        
+        NSError* error;
+        NSData* objectData = [json dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:objectData options:kNilOptions error:&error];
+        
+        NSArray *jsonArr = [jsonDict objectForKey:@"ns"];
+
+        CDVPluginResult* result = [CDVPluginResult
+                                   resultWithStatus:CDVCommandStatus_ERROR];
+        
+        if (collection && objectData && jsonDict && jsonArr && [collection saveObjects: jsonArr]) {
+            
+            result = [CDVPluginResult
+                      resultWithStatus:CDVCommandStatus_OK];
+            [self success:result callbackId:callbackId];
+        }
+        else {
+            [self error:result callbackId:callbackId];
+        }
+        
+        
+        return result;
+    }
+}
+
+
 - (CDVPluginResult*) saveObject:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
