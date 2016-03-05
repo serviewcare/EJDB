@@ -57,6 +57,8 @@
 
     <header-file src="src/ios/EJDBPlugin.h" target-dir="EJDB"/>
     <source-file src="src/ios/EJDBPlugin.m" target-dir="EJDB"/>
+    <header-file src="src/ios/LZ.h" target-dir="EJDB"/>
+    <source-file src="src/ios/LZ.m" target-dir="EJDB"/>
 
   </platform>
 

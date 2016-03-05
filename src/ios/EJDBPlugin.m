@@ -1,5 +1,6 @@
 #import "EJDBKit.h"
 #import "EJDBPlugin.h"
+#import "LZ.h"
 #import <Foundation/Foundation.h>
 
 @implementation EJDBPlugin
@@ -180,6 +181,8 @@ static NSMutableDictionary *collectionHandles = nil;
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
             NSString* jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             
+            NSString* lzJsonStr = [jsonStr compressLZ];
+            
             if(!jsonData) {
                 [self error:result callbackId:callbackId];
                 return result;
@@ -187,7 +190,7 @@ static NSMutableDictionary *collectionHandles = nil;
             
             result = [CDVPluginResult
                       resultWithStatus:CDVCommandStatus_OK
-                      messageAsString: jsonStr];
+                      messageAsString: lzJsonStr];
 
             [self.commandDelegate sendPluginResult:result callbackId:callbackId];
         }

@@ -1,3 +1,4 @@
+
 /*global cordova, module*/
 module.exports = {
     createDatabaseWithPath: function (path, successCallback, errorCallback) {
@@ -15,9 +16,7 @@ module.exports = {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "saveObjects", [name, jsonObj]);
     },
     find: function(name, query, hints, successCallback, errorCallback) {
-	var jsonQuery = JSON.stringify(query);
-	var jsonHints = JSON.stringify(hints);
-	cordova.exec(function(r){if(successCallback){successCallback(JSON.parse(r))}}, errorCallback, "EJDBPlugin", "find", [name, jsonQuery, jsonHints]);
+	cordova.exec(function(r){successCallback, errorCallback, "EJDBPlugin", "find", [name, jsonQuery, jsonHints]);
     },
     remove: function(name, uid, successCallback, errorCallback) {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "remove", [name, uid]);	
