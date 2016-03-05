@@ -16,7 +16,7 @@ module.exports = {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "saveObjects", [name, jsonObj]);
     },
     find: function(name, query, hints, successCallback, errorCallback) {
-	cordova.exec(function(r){successCallback, errorCallback, "EJDBPlugin", "find", [name, jsonQuery, jsonHints]);
+	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "find", [name, jsonQuery, jsonHints]);
     },
     remove: function(name, uid, successCallback, errorCallback) {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "remove", [name, uid]);	
