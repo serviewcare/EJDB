@@ -1,6 +1,6 @@
 #import "EJDBKit.h"
 #import "EJDBPlugin.h"
-#import "LZ.h"
+#import "NSString+LZCompression.h"
 #import <Foundation/Foundation.h>
 
 @implementation EJDBPlugin
