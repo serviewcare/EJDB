@@ -57,8 +57,8 @@
 
     <header-file src="src/ios/EJDBPlugin.h" target-dir="EJDB"/>
     <source-file src="src/ios/EJDBPlugin.m" target-dir="EJDB"/>
-    <header-file src="src/ios/NSString+LZCompression.h" target-dir="EJDB"/>
-    <source-file src="src/ios/NSString+LZCompression.m" target-dir="EJDB"/>
+    <header-file src="src/ios/NSData+GZIP.h" target-dir="EJDB"/>
+    <source-file src="src/ios/NSData+GZIP.m" target-dir="EJDB"/>
 
   </platform>
 

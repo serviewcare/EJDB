@@ -1,6 +1,6 @@
 #import "EJDBKit.h"
 #import "EJDBPlugin.h"
-#import "NSString+LZCompression.h"
+#import "NSData+GZIP.h"
 #import <Foundation/Foundation.h>
 
 @implementation EJDBPlugin
@@ -179,9 +179,8 @@ static NSMutableDictionary *collectionHandles = nil;
             NSMutableDictionary *postDict = [[NSMutableDictionary alloc]init];
             [postDict setValue:results forKey:@"results"];
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
-            NSString* jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            
-            NSString* lzJsonStr = [jsonStr compressLZ];
+            NSData* zippedData = [jsonData gzippedData];
+            NSString* jsonStr = [[NSString alloc] initWithData:zippedData encoding:NSUTF8StringEncoding];
             
             if(!jsonData) {
                 [self error:result callbackId:callbackId];
@@ -190,7 +189,7 @@ static NSMutableDictionary *collectionHandles = nil;
             
             result = [CDVPluginResult
                       resultWithStatus:CDVCommandStatus_OK
-                      messageAsString: lzJsonStr];
+                      messageAsString: jsonStr];
 
             [self.commandDelegate sendPluginResult:result callbackId:callbackId];
         }
