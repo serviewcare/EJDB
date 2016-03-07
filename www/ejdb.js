@@ -21,5 +21,8 @@ module.exports = {
     },
     remove: function(name, uid, successCallback, errorCallback) {
 	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "remove", [name, uid]);	
+    },
+    maxDate: function(successCallback, errorCallback) {
+    	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "maxDate", []);
     }
 };

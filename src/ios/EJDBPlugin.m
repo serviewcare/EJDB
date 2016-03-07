@@ -83,6 +83,56 @@ static NSMutableDictionary *collectionHandles = nil;
     }
 }
 
+- (CDVPluginResult*) maxDate:(CDVInvokedUrlCommand*)command {
+    @synchronized(self) {
+        [NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehavior10_4];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        [dateFormatter setCalendar:[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]];
+        
+        // Max date starts as the earliest date possible.
+        NSDate* maxDate = [NSDate dateWithTimeIntervalSince1970: 0];
+        
+        NSString* callbackId = [command callbackId];
+        
+        // Now we iterate over all collected collection data.
+        for(NSString* collectionName in [collectionHandles allKeys]) {
+            // Find collection by the name handle.
+            EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: collectionName];
+            
+            NSError* error;
+            NSDictionary* findAll = [NSJSONSerialization JSONObjectWithData:@"{}" options:kNilOptions error:&error];
+            NSDictionary* onlyDateUpdated = [NSJSONSerialization JSONObjectWithData:@"{$fields: {dateUpdated: 1}}" options:kNilOptions error:&error];
+            
+            if (collection) {
+                NSArray* results = [jb findObjectsWithQuery:findAll hints:onlyDateUpdated inCollection:collection error:&error];
+                
+                for(NSDictionary* nextObj in results) {
+                    NSString* dateUpdated = [nextObj objectForKey:@"dateUpdated"];
+                    NSDate *date = [[NSDate alloc] init];
+                    
+                    date = [dateFormatter dateFromString:dateUpdated];
+                    if([maxDate compare: date] == NSOrderedAscending) {
+                        maxDate = date;
+                    }
+                    
+                }
+                
+            }
+        }
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:maxDate options:0 error:nil];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+        
+        CDVPluginResult* result = [CDVPluginResult
+                  resultWithStatus:CDVCommandStatus_OK
+                  messageAsString: jsonString];
+        
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+    }
+}
 - (CDVPluginResult*) saveObjects:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
