@@ -180,7 +180,7 @@ static NSMutableDictionary *collectionHandles = nil;
             [postDict setValue:results forKey:@"results"];
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:0 error:nil];
             NSData* zippedData = [jsonData gzippedData];
-            NSString* jsonStr = [[NSString alloc] initWithData:zippedData encoding:NSUTF8StringEncoding];
+            NSString* base64Encoded = [zippedData base64EncodedStringWithOptions:0];
             
             if(!jsonData) {
                 [self error:result callbackId:callbackId];
@@ -189,7 +189,7 @@ static NSMutableDictionary *collectionHandles = nil;
             
             result = [CDVPluginResult
                       resultWithStatus:CDVCommandStatus_OK
-                      messageAsString: jsonStr];
+                      messageAsString: base64Encoded];
 
             [self.commandDelegate sendPluginResult:result callbackId:callbackId];
         }
