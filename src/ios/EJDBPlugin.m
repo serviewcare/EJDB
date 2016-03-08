@@ -87,12 +87,13 @@ static NSMutableDictionary *collectionHandles = nil;
     @synchronized(self) {
         [NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehavior10_4];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
         [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
         [dateFormatter setCalendar:[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]];
         
         // Max date starts as the earliest date possible.
-        NSDate* maxDate = [NSDate dateWithTimeIntervalSince1970: 0];
+        NSDate* earliest = [NSDate dateWithTimeIntervalSince1970: 0];
+        NSDate* maxDate = earliest;
         
         NSString* callbackId = [command callbackId];
         
@@ -102,8 +103,8 @@ static NSMutableDictionary *collectionHandles = nil;
             EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: collectionName];
             
             NSError* error;
-            NSDictionary* findAll = [NSJSONSerialization JSONObjectWithData:@"{}" options:kNilOptions error:&error];
-            NSDictionary* onlyDateUpdated = [NSJSONSerialization JSONObjectWithData:@"{$fields: {dateUpdated: 1}}" options:kNilOptions error:&error];
+            NSDictionary* findAll = @{};
+            NSDictionary* onlyDateUpdated = @{@"$fields":@{@"dateUpdated": @1}};
             
             if (collection) {
                 NSArray* results = [jb findObjectsWithQuery:findAll hints:onlyDateUpdated inCollection:collection error:&error];
@@ -122,15 +123,22 @@ static NSMutableDictionary *collectionHandles = nil;
             }
         }
         
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:maxDate options:0 error:nil];
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-        
-        CDVPluginResult* result = [CDVPluginResult
-                  resultWithStatus:CDVCommandStatus_OK
-                  messageAsString: jsonString];
-        
-        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+        CDVPluginResult* result = nil;
+        // If there are no dates in the collection this will happen, and I don't want us to save this date.
+        if([maxDate isEqualToDate: earliest]) {
+            result = [CDVPluginResult
+                                       resultWithStatus:CDVCommandStatus_ERROR];
+            
+            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+        }
+        else {
+            result = [CDVPluginResult
+                      resultWithStatus:CDVCommandStatus_OK
+                      messageAsString: [dateFormatter stringFromDate: maxDate]];
+            
+            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+        }
+        return result;
     }
 }
 - (CDVPluginResult*) saveObjects:(CDVInvokedUrlCommand*)command {
@@ -278,25 +286,5 @@ static NSMutableDictionary *collectionHandles = nil;
         return result;
     }
 }
-
-/*
-- (void)init:(CDVInvokedUrlCommand*)command
-{
-
-    NSString* callbackId = [command callbackId];
-    NSString* name = [[command arguments] objectAtIndex:0];
-    NSString* msg = [NSString stringWithFormat: @"Hello, %@", name];
-
-    CDVPluginResult* result = [CDVPluginResult
-                               resultWithStatus:CDVCommandStatus_OK
-                               messageAsString:msg];
-
-    #if TARGET_IPHONE_SIMULATOR
-    #else
-    #endif
-
-    [self success:result callbackId:callbackId];
-}
- */
 
 @end
