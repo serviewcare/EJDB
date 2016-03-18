@@ -8,5 +8,6 @@
 - (CDVPluginResult*) maxDate:(CDVInvokedUrlCommand*)command;
 - (CDVPluginResult*) find:(CDVInvokedUrlCommand*)command;
 - (CDVPluginResult*) remove:(CDVInvokedUrlCommand*)command;
+- (CDVPluginResult*) count:(CDVInvokedUrlCommand*)command;
 
 @end

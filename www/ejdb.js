@@ -24,5 +24,8 @@ module.exports = {
     },
     maxDate: function(successCallback, errorCallback) {
     	cordova.exec(successCallback, errorCallback, "EJDBPlugin", "maxDate", []);
+    },
+    count: function(successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "EJDBPlugin", "count", [name, jsonQuery, jsonHints]);
     }
 };

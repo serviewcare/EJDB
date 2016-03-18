@@ -287,4 +287,45 @@ static NSMutableDictionary *collectionHandles = nil;
     }
 }
 
+- (CDVPluginResult*) count:(CDVInvokedUrlCommand*)command {
+    @synchronized(self) {
+        NSString* callbackId = [command callbackId];
+
+        NSString* name = [[command arguments] objectAtIndex:0];
+        NSString* query = [[command arguments] objectAtIndex:1];
+        NSString* hint = [[command arguments] objectAtIndex:2];
+
+        // Find collection by the name handle.
+        EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
+
+        NSError* error;
+        NSData* objectData = [query dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:objectData options:kNilOptions error:&error];
+
+        NSData* hintData = [hint dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary* hintDict = [NSJSONSerialization JSONObjectWithData:hintData options:kNilOptions error:&error];
+
+        CDVPluginResult* result = [CDVPluginResult
+                                   resultWithStatus:CDVCommandStatus_ERROR];
+
+        if (collection && objectData && jsonDict) {
+            EJDBQuery* query = [jb createQuery:jsonDict hints:hintDict inCollection:collection];
+
+            uint32_t numResults = [query fetchCountWithError:&error];
+
+            result = [CDVPluginResult
+                      resultWithStatus:CDVCommandStatus_OK
+                      messageAsInt: numResults];
+
+            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+        }
+        else {
+            [self error:result callbackId:callbackId];
+        }
+
+        return result;
+
+    }
+}
+
 @end
