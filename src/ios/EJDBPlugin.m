@@ -309,7 +309,7 @@ static NSMutableDictionary *collectionHandles = nil;
                                    resultWithStatus:CDVCommandStatus_ERROR];
 
         if (collection && objectData && jsonDict) {
-            EJDBQuery* query = [jb createQuery:jsonDict hints:hintDict inCollection:collection];
+            EJDBQuery* query = [jb createQuery:jsonDict hints:hintDict forCollection:collection];
 
             uint32_t numResults = [query fetchCountWithError:&error];
 
