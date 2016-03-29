@@ -27,6 +27,7 @@
     <framework src="libz.dylib" />
 
     <source-file src="src/ios/libs/libEJDBKit.a" framework="true"/>
+    <source-file src="src/ios/libs/libtcejdb.a" framework="true"/>
 
     <header-file src="src/ios/headers/ejdb.h" target-dir="EJDB"/>
     <header-file src="src/ios/headers/bson.h" target-dir="EJDB"/>
