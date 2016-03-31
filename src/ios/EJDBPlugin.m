@@ -10,14 +10,13 @@ static EJDBDatabase *jb = nil;
 static NSMutableDictionary *collectionHandles = nil;
 
 
-- (CDVPluginResult*) createDatabaseWithPath:(CDVInvokedUrlCommand*)command {
-
+- (void) createDatabaseWithPath:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
         
         NSString* path = [[command arguments] objectAtIndex:0];
         
-        if(jb && [jb isOpen]) {
+        if (jb && [jb isOpen]) {
             [jb close];
         }
         
@@ -29,27 +28,23 @@ static NSMutableDictionary *collectionHandles = nil;
         // All data will be saved to silversearch.db file.
         jb = [[EJDBDatabase alloc] initWithPath: path dbFileName:@"silversearch.db"];
         
-        if(jb) {
+        if (jb) {
             opened = [jb openWithError: NULL];
         }
-        CDVPluginResult* result = [CDVPluginResult
-                  resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
         
         if (jb && opened) {
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK];
-            [self success:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         
-        return result;
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
     
 }
 
-- (CDVPluginResult*) initializeCollectionWithName:(CDVInvokedUrlCommand*)command {
+- (void) initializeCollectionWithName:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
         
@@ -63,27 +58,22 @@ static NSMutableDictionary *collectionHandles = nil;
         //Already have one that you want to retrieve?
         collection = [jb ensureCollectionWithName:name error: NULL];
 
-        CDVPluginResult* result = [CDVPluginResult
-                                   resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
 
         if ((collection)) {
-        
             // Save collection instance by name.
             [collectionHandles setObject: collection forKey: name];
 
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK];
-            [self success:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         
-        return result;
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
 
-- (CDVPluginResult*) maxDate:(CDVInvokedUrlCommand*)command {
+- (void) maxDate:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         [NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehavior10_4];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -98,7 +88,7 @@ static NSMutableDictionary *collectionHandles = nil;
         NSString* callbackId = [command callbackId];
         
         // Now we iterate over all collected collection data.
-        for(NSString* collectionName in [collectionHandles allKeys]) {
+        for (NSString* collectionName in [collectionHandles allKeys]) {
             // Find collection by the name handle.
             EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: collectionName];
             
@@ -109,12 +99,12 @@ static NSMutableDictionary *collectionHandles = nil;
             if (collection) {
                 NSArray* results = [jb findObjectsWithQuery:findAll hints:onlyDateUpdated inCollection:collection error:&error];
                 
-                for(NSDictionary* nextObj in results) {
+                for (NSDictionary* nextObj in results) {
                     NSString* dateUpdated = [nextObj objectForKey:@"dateUpdated"];
                     NSDate *date = [[NSDate alloc] init];
                     
                     date = [dateFormatter dateFromString:dateUpdated];
-                    if([maxDate compare: date] == NSOrderedAscending) {
+                    if ([maxDate compare: date] == NSOrderedAscending) {
                         maxDate = date;
                     }
                     
@@ -125,23 +115,16 @@ static NSMutableDictionary *collectionHandles = nil;
         
         CDVPluginResult* result = nil;
         // If there are no dates in the collection this will happen, and I don't want us to save this date.
-        if([maxDate isEqualToDate: earliest]) {
-            result = [CDVPluginResult
-                                       resultWithStatus:CDVCommandStatus_ERROR];
-            
-            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+        if ([maxDate isEqualToDate: earliest]) {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: [dateFormatter stringFromDate: maxDate]];
         }
-        else {
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK
-                      messageAsString: [dateFormatter stringFromDate: maxDate]];
-            
-            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
-        }
-        return result;
+
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
-- (CDVPluginResult*) saveObjects:(CDVInvokedUrlCommand*)command {
+- (void) saveObjects:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
         
@@ -157,26 +140,20 @@ static NSMutableDictionary *collectionHandles = nil;
         
         NSArray *jsonArr = [jsonDict objectForKey:@"ns"];
 
-        CDVPluginResult* result = [CDVPluginResult
-                                   resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
         
         if (collection && objectData && jsonDict && jsonArr && [collection saveObjects: jsonArr]) {
-            
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK];
-            [self success:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         
-        
-        return result;
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
 
 
-- (CDVPluginResult*) saveObject:(CDVInvokedUrlCommand*)command {
+- (void) saveObject:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
         
@@ -191,25 +168,19 @@ static NSMutableDictionary *collectionHandles = nil;
         NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:objectData options:kNilOptions error:&error];
         
         
-        CDVPluginResult* result = [CDVPluginResult
-                                   resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
         
         if (collection && objectData && jsonDict && [collection saveObject: jsonDict]) {
-            
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK];
-            [self success:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         
-        
-        return result;
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
 
-- (CDVPluginResult*) find:(CDVInvokedUrlCommand*)command {
+- (void) find:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
         
@@ -228,8 +199,7 @@ static NSMutableDictionary *collectionHandles = nil;
         NSDictionary* hintDict = [NSJSONSerialization JSONObjectWithData:hintData options:kNilOptions error:&error];
 
         
-        CDVPluginResult* result = [CDVPluginResult
-                                   resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
         
         if (collection && objectData && jsonDict) {
             NSArray* results = [jb findObjectsWithQuery:jsonDict hints:hintDict inCollection:collection error:&error];
@@ -240,26 +210,20 @@ static NSMutableDictionary *collectionHandles = nil;
             NSData* zippedData = [jsonData gzippedData];
             NSString* base64Encoded = [zippedData base64EncodedStringWithOptions:0];
             
-            if(!jsonData) {
-                [self error:result callbackId:callbackId];
-                return result;
+            if (!jsonData) {
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            } else {
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: base64Encoded];
             }
-            
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK
-                      messageAsString: base64Encoded];
-
-            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         
-        return result;
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
 
-- (CDVPluginResult*) remove:(CDVInvokedUrlCommand*)command {
+- (void) remove:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
         
@@ -268,26 +232,20 @@ static NSMutableDictionary *collectionHandles = nil;
         
         // Find collection by the name handle.
         EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
-        
-        NSError* error;
 
-        CDVPluginResult* result = [CDVPluginResult
-                                   resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
         
         if (collection && [collection removeObjectWithOID:uid]) {
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK];
-            [self success:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         
-        return result;
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
 
-- (CDVPluginResult*) count:(CDVInvokedUrlCommand*)command {
+- (void) count:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
 
@@ -305,26 +263,19 @@ static NSMutableDictionary *collectionHandles = nil;
         NSData* hintData = [hint dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary* hintDict = [NSJSONSerialization JSONObjectWithData:hintData options:kNilOptions error:&error];
 
-        CDVPluginResult* result = [CDVPluginResult
-                                   resultWithStatus:CDVCommandStatus_ERROR];
+        CDVPluginResult* result = nil;
 
         if (collection && objectData && jsonDict) {
             EJDBQuery* query = [jb createQuery:jsonDict hints:hintDict forCollection:collection];
 
             uint32_t numResults = [query fetchCountWithError:&error];
 
-            result = [CDVPluginResult
-                      resultWithStatus:CDVCommandStatus_OK
-                      messageAsInt: numResults];
-
-            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
-        }
-        else {
-            [self error:result callbackId:callbackId];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt: numResults];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
 
-        return result;
-
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }
 

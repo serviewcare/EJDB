@@ -2,12 +2,12 @@
 
 @interface EJDBPlugin : CDVPlugin
 
-- (CDVPluginResult*) createDatabaseWithPath:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) initializeCollectionWithName:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) saveObject:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) maxDate:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) find:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) remove:(CDVInvokedUrlCommand*)command;
-- (CDVPluginResult*) count:(CDVInvokedUrlCommand*)command;
+- (void) createDatabaseWithPath:(CDVInvokedUrlCommand*)command;
+- (void) initializeCollectionWithName:(CDVInvokedUrlCommand*)command;
+- (void) saveObject:(CDVInvokedUrlCommand*)command;
+- (void) maxDate:(CDVInvokedUrlCommand*)command;
+- (void) find:(CDVInvokedUrlCommand*)command;
+- (void) remove:(CDVInvokedUrlCommand*)command;
+- (void) count:(CDVInvokedUrlCommand*)command;
 
 @end
