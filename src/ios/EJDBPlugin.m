@@ -240,7 +240,7 @@ static NSMutableDictionary *collectionHandles = nil;
         EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
 
         // Convert string option into the enum value (hacky I know, but Objective-C doesn't support switch on strings)
-        EJDBIndexOptions* option = nil;
+        EJDBIndexOptions option;
         if ([optionStr isEqualToString:@"EJDBIndexDrop"]) {
             option = EJDBIndexDrop;
         } else if ([optionStr isEqualToString:@"EJDBIndexDropAll"]) {
