@@ -232,20 +232,20 @@ static NSMutableDictionary *collectionHandles = nil;
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
 
-        NSString* name [[command arguments] objectAtIndex:0];
-        NSString* optionStr [[command arguments] objectAtIndex:1];
-        NSString* fieldPath [[command arguments] objectAtIndex:2];
+        NSString* name = [[command arguments] objectAtIndex:0];
+        NSString* optionStr = [[command arguments] objectAtIndex:1];
+        NSString* fieldPath = [[command arguments] objectAtIndex:2];
 
         // Find collection by the name handle.
         EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
 
         // Convert string option into the enum value (hacky I know, but Objective-C doesn't support switch on strings)
-        NSString* option = nil;
+        EJDBIndexOptions* option = nil;
         if ([optionStr isEqualToString:@"EJDBIndexDrop"]) {
             option = EJDBIndexDrop;
         } else if ([optionStr isEqualToString:@"EJDBIndexDropAll"]) {
             option = EJDBIndexDropAll;
-        } else if ([optionStr isEqualToString:@"EJDBIndexOptimize"])
+        } else if ([optionStr isEqualToString:@"EJDBIndexOptimize"]) {
             option = EJDBIndexOptimize;
         } else if ([optionStr isEqualToString:@"EJDBIndexRebuild"]) {
             option = EJDBIndexRebuild;
@@ -262,7 +262,7 @@ static NSMutableDictionary *collectionHandles = nil;
 
         CDVPluginResult* result = nil;
         
-        if (collection && option && fieldPath && [collection setIndexOption:options forFieldPath:fieldPath]) {
+        if (collection && option && fieldPath && [collection setIndexOption:option forFieldPath:fieldPath]) {
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         } else {
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
