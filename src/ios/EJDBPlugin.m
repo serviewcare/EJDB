@@ -73,57 +73,6 @@ static NSMutableDictionary *collectionHandles = nil;
     }
 }
 
-- (void) maxDate:(CDVInvokedUrlCommand*)command {
-    @synchronized(self) {
-        [NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehavior10_4];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-        [dateFormatter setCalendar:[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]];
-        
-        // Max date starts as the earliest date possible.
-        NSDate* earliest = [NSDate dateWithTimeIntervalSince1970: 0];
-        NSDate* maxDate = earliest;
-        
-        NSString* callbackId = [command callbackId];
-        
-        // Now we iterate over all collected collection data.
-        for (NSString* collectionName in [collectionHandles allKeys]) {
-            // Find collection by the name handle.
-            EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: collectionName];
-            
-            NSError* error;
-            NSDictionary* findAll = @{};
-            NSDictionary* onlyDateUpdated = @{@"$fields":@{@"dateUpdated": @1}};
-            
-            if (collection) {
-                NSArray* results = [jb findObjectsWithQuery:findAll hints:onlyDateUpdated inCollection:collection error:&error];
-                
-                for (NSDictionary* nextObj in results) {
-                    NSString* dateUpdated = [nextObj objectForKey:@"dateUpdated"];
-                    NSDate *date = [[NSDate alloc] init];
-                    
-                    date = [dateFormatter dateFromString:dateUpdated];
-                    if ([maxDate compare: date] == NSOrderedAscending) {
-                        maxDate = date;
-                    }
-                    
-                }
-                
-            }
-        }
-        
-        CDVPluginResult* result = nil;
-        // If there are no dates in the collection this will happen, and I don't want us to save this date.
-        if ([maxDate isEqualToDate: earliest]) {
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        } else {
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: [dateFormatter stringFromDate: maxDate]];
-        }
-
-        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
-    }
-}
 - (void) saveObjects:(CDVInvokedUrlCommand*)command {
     @synchronized(self) {
         NSString* callbackId = [command callbackId];
@@ -275,6 +224,50 @@ static NSMutableDictionary *collectionHandles = nil;
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
 
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+    }
+}
+
+- (void) setIndexOption:(CDVInvokedUrlCommand*)command {
+    @synchronized(self) {
+        NSString* callbackId = [command callbackId];
+
+        NSString* name [[command arguments] objectAtIndex:0];
+        NSString* optionStr [[command arguments] objectAtIndex:1];
+        NSString* fieldPath [[command arguments] objectAtIndex:2];
+
+        // Find collection by the name handle.
+        EJDBCollection *collection = (EJDBCollection*)[collectionHandles objectForKey: name];
+
+        // Convert string option into the enum value (hacky I know, but Objective-C doesn't support switch on strings)
+        NSString* option = nil;
+        if ([optionStr isEqualToString:@"EJDBIndexDrop"]) {
+            option = EJDBIndexDrop;
+        } else if ([optionStr isEqualToString:@"EJDBIndexDropAll"]) {
+            option = EJDBIndexDropAll;
+        } else if ([optionStr isEqualToString:@"EJDBIndexOptimize"])
+            option = EJDBIndexOptimize;
+        } else if ([optionStr isEqualToString:@"EJDBIndexRebuild"]) {
+            option = EJDBIndexRebuild;
+        } else if ([optionStr isEqualToString:@"EJDBIndexNumber"]) {
+            option = EJDBIndexNumber;
+        } else if ([optionStr isEqualToString:@"EJDBIndexString"]) {
+            option = EJDBIndexString;
+        } else if ([optionStr isEqualToString:@"EJDBIndexArray"]) {
+            option = EJDBIndexArray;
+        } else if ([optionStr isEqualToString:@"EJDBIndexStringCaseInsensitive"]) {
+            option = EJDBIndexStringCaseInsensitive;
+        }
+
+
+        CDVPluginResult* result = nil;
+        
+        if (collection && option && fieldPath && [collection setIndexOption:options forFieldPath:fieldPath]) {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        }
+        
         [self.commandDelegate sendPluginResult:result callbackId:callbackId];
     }
 }

@@ -22,12 +22,12 @@ module.exports = {
     remove: function(name, uid, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "EJDBPlugin", "remove", [name, uid]);	
     },
-    maxDate: function(successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "EJDBPlugin", "maxDate", []);
-    },
     count: function(name, query, hints, successCallback, errorCallback) {
         var jsonQuery = JSON.stringify(query);
         var jsonHints = JSON.stringify(hints);
         cordova.exec(successCallback, errorCallback, "EJDBPlugin", "count", [name, jsonQuery, jsonHints]);
+    },
+    setIndexOption: function(name, option, fieldPath, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "EJDBPlugin", "setIndexOption", [name, option, fieldPath]);
     }
 };
