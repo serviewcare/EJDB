@@ -50,13 +50,15 @@ static NSMutableDictionary *collectionHandles = nil;
         
         NSString* name = [[command arguments] objectAtIndex:0];
 
-        EJDBCollection *collection = [[EJDBCollection alloc]initWithName:name db:jb];
+        // These operations were happening in the ensureCollectionWithName method so
+        // they were commented out.  No ill side effects have been observed thus far.
+        //EJDBCollection *collection = [[EJDBCollection alloc]initWithName:name db:jb];
         
         // This creates the collection for you if it doesn't already exist
-        [collection openWithError:NULL];
+        //[collection openWithError:NULL];
         
         //Already have one that you want to retrieve?
-        collection = [jb ensureCollectionWithName:name error: NULL];
+        EJDBCollection* collection = [jb ensureCollectionWithName:name error: NULL];
 
         CDVPluginResult* result = nil;
 
